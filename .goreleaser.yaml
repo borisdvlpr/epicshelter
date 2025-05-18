@@ -1,0 +1,81 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+builds:
+  - main: epicshelter/main.go
+    binary: epicshelter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - formats: [tar.gz]
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+
+dockers:
+  - image_templates:
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-amd64"
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.version={{.Version}}
+      - --label=org.opencontainers.image.revision={{.Commit}}
+      - --label=org.opencontainers.image.created={{.Date}}
+
+  - image_templates:
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-arm64"
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - --platform=linux/arm64
+      - --label=org.opencontainers.image.version={{.Version}}
+      - --label=org.opencontainers.image.revision={{.Commit}}
+      - --label=org.opencontainers.image.created={{.Date}}
+
+docker_manifests:
+  - name_template: "docker.io/b0risdvlpr/{{ .ProjectName }}:{{ .Version }}"
+    image_templates:
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:{{ .Version }}-arm64"
+
+  - name_template: "docker.io/b0risdvlpr/{{ .ProjectName }}:latest"
+    image_templates:
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-amd64"
+      - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-arm64"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^chore"
+      - "^build"
+      - "^docs"
+      - "^test"
