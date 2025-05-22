@@ -1,6 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
-  "packages": ["kind@latest", "kubectl@latest"],
+  "packages": [
+    "kind@latest",
+    "kubectl@latest",
+    "kubernetes-helm@latest"
+  ],
   "shell": {
     "init_hook": ["echo 'Welcome to devbox!' > /dev/null", "alias k=kubectl"],
     "scripts": {
