@@ -1,4 +1,5 @@
-FROM alpine:latest
+# Use a multi-platform Alpine base image to ensure compatibility
+FROM --platform=$BUILDPLATFORM alpine:latest
 
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
