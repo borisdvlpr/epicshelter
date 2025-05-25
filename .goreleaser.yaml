@@ -39,7 +39,7 @@ dockers:
       - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-amd64"
     goos: linux
     goarch: amd64
-    dockerfile: Dockerfile
+    dockerfile: epicshelter/Dockerfile
     build_flag_templates:
       - --platform=linux/amd64
       - --label=org.opencontainers.image.version={{.Version}}
@@ -51,7 +51,7 @@ dockers:
       - "docker.io/b0risdvlpr/{{ .ProjectName }}:latest-arm64"
     goos: linux
     goarch: arm64
-    dockerfile: Dockerfile
+    dockerfile: epicshelter/Dockerfile
     build_flag_templates:
       - --platform=linux/arm64
       - --label=org.opencontainers.image.version={{.Version}}
