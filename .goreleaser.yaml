@@ -9,7 +9,8 @@
 version: 2
 
 builds:
-  - main: ./epicshelter/main.go
+  - dir: epicshelter
+    main: main.go
     binary: epicshelter
     env:
       - CGO_ENABLED=0
