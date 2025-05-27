@@ -76,7 +76,10 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^chore"
       - "^build"
+      - "^ci"
+      - "^chore"
       - "^docs"
+      - "^refactor"
+      - "^style"
       - "^test"
