@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: epicshelter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: epicshelter
+  template:
+    metadata:
+      labels:
+        app: epicshelter
+    spec:
+      containers:
+        - name: epicshelter
+          image: b0risdvlpr/epicshelter
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: epicshelter
+spec:
+  type: ClusterIP
+  selector:
+    app: epicshelter
+  ports:
+    - port: 3000
+      targetPort: 3000
