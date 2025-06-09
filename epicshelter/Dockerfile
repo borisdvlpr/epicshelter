@@ -25,4 +25,6 @@ USER appuser
 
 COPY epicshelter /usr/bin/epicshelter
 
+EXPOSE 3000
+
 ENTRYPOINT ["/usr/bin/epicshelter"]
