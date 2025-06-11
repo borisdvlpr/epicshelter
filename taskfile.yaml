@@ -1,0 +1,61 @@
+version: "3"
+
+silent: true
+
+vars:
+  ENV: local
+  ARGO_NS: argocd
+  APP_NS: epicshelter
+
+tasks:
+  setup-cluster:
+    desc: Create a Kind cluster for {{.ENV}}
+    cmds:
+      - kind create cluster --name epicshelter-{{.ENV}} --config infra/kind/cluster-config.yaml || true
+
+  setup-argo:
+    desc: Install ArgoCD and configure application
+    cmds:
+      - echo "----- Setting up ArgoCD -----"
+      - kubectl create namespace {{.ARGO_NS}} || true
+      - kubectl apply -k infra/argocd
+      - argocd login --core
+      - kubectl config set-context --current --namespace {{.ARGO_NS}}
+      - kubectl wait --for=condition=Available deployment --all --timeout=90s
+      - kubectl apply -f argocd/argo-app.yaml
+
+  setup-network:
+    desc: Configure networking components
+    cmds:
+      - echo "----- Setting up network infrastructure -----"
+      - kubectl create namespace {{.APP_NS}} || true
+      - kubectl apply -k infra/network
+      - kubectl config set-context --current --namespace {{.APP_NS}}
+      - kubectl wait --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
+      - kubectl apply -f infra/network/ingress/ingress-nginx.yaml
+
+  deploy-data:
+    desc: Deploy data infrastructure services
+    cmds:
+      - echo "----- Deploying data infrastructure -----"
+      - kubectl create namespace {{.APP_NS}} || true
+      - kubectl config set-context --current --namespace {{.APP_NS}}
+      - kubectl apply -k infra/storage
+      - kubectl wait --for=condition=ready pod --selector=app=valkey --timeout=90s
+
+  deploy-app:
+    desc: Deploy epicshelter application services
+    cmds:
+      - echo "----- Deploying app on local cluster -----"
+      - kubectl create namespace {{.APP_NS}} || true
+      - kubectl config set-context --current --namespace={{.APP_NS}}
+      - kubectl apply -f manifests/epicshelter/epicshelter.yaml
+
+  deploy:local:
+    desc: Complete local environment setup and deployment
+    cmds:
+      - task: setup-cluster
+      - task: setup-argo
+      - task: setup-network
+      - task: deploy-data
+      - task: deploy-app

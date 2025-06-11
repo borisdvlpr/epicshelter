@@ -20,11 +20,14 @@ dist/
 go.work
 go.work.sum
 
+# secrets files
+*-sa.json
+
 # env file
 .env
 
 # editor
-.vscode
+.idea
 .zed
 
 # misc
