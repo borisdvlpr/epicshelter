@@ -22,7 +22,7 @@ tasks:
       - argocd login --core
       - kubectl config set-context --current --namespace {{.ARGO_NS}}
       - kubectl wait --for=condition=Available deployment --all --timeout=90s
-      - kubectl apply -f argocd/argo-app.yaml
+      - kubectl apply -f argocd/argo-infra-app.yaml -f argocd/argo-epicshelter-app.yaml
 
   setup-network:
     desc: Configure networking components
