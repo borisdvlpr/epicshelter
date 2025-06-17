@@ -76,7 +76,6 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^build"
       - "^ci"
       - "^chore"
       - "^docs"
