@@ -22,12 +22,12 @@ spec:
             - containerPort: 6379
           resources:
             limits:
+              memory: "512Mi"
+              cpu: "1000m"
+            requests:
               memory: "256Mi"
               cpu: "500m"
-            requests:
-              memory: "128Mi"
-              cpu: "250m"
-          args: [ "valkey-server", "--save", "900", "1", "--dir", "/data" ]
+          args: ["valkey-server", "--save", "900", "1", "--dir", "/data"]
           volumeMounts:
             - name: valkey-data
               mountPath: /data
@@ -49,6 +49,3 @@ spec:
     - port: 6379
       targetPort: 6379
   type: ClusterIP
-
-
-
