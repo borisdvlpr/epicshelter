@@ -5,6 +5,7 @@ silent: true
 vars:
   ENV: local
   ARGO_NS: argocd
+  INGRESS_NS: nginx-ingress
   APP_NS: epicshelter
 
 tasks:
@@ -28,9 +29,9 @@ tasks:
     desc: Configure networking components
     cmds:
       - echo "----- Setting up network infrastructure -----"
-      - kubectl create namespace {{.APP_NS}} || true
+      - kubectl create namespace {{.INGRESS_NS}} || true
       - kubectl apply -k infra/network
-      - kubectl config set-context --current --namespace {{.APP_NS}}
+      - kubectl config set-context --current --namespace {{.INGRESS_NS}}
       - kubectl wait --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
       - kubectl apply -f infra/network/ingress/ingress-nginx.yaml
 
