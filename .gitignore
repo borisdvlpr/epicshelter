@@ -28,7 +28,7 @@ go.work.sum
 
 # editor
 .idea
-.zed
+.vscode
 
 # misc
 .DS_Store
