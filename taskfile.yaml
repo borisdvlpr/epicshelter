@@ -34,6 +34,7 @@ tasks:
       - helm repo add crossplane-stable https://charts.crossplane.io/stable
       - helm repo update
       - helm install crossplane crossplane-stable/crossplane --namespace {{.CROSSPLANE_NS}} --create-namespace || true
+      - kubectl wait --for=condition=Available deployment/crossplane --namespace {{.CROSSPLANE_NS}} --timeout=90s
 
   configure-gcp-provider:
     desc: Configure Google Cloud Platform provider
@@ -41,6 +42,7 @@ tasks:
       - echo "----- Configuring GCP Provider -----"
       - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
       - kubectl apply -f infra/crossplane/gcp-provider.yaml
+      - kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/provider-gcp-gkecluster --timeout=90s
       - kubectl create secret generic gcp-secret --from-file=creds=./infra/crossplane/gcp-credentials.json || true
       - kubectl apply -f infra/crossplane/gcp-provider-config.yaml
 
