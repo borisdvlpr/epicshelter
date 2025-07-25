@@ -39,8 +39,9 @@ tasks:
     desc: Configure Google Cloud Platform provider
     cmds:
       - echo "----- Configuring GCP Provider -----"
+      - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
       - kubectl apply -f infra/crossplane/gcp-provider.yaml
-      - kubectl create secret generic gcp-secret --namespace {{.CROSSPLANE_NS}} --from-file=creds=./infra/crossplane/gcp-credentials.json
+      - kubectl create secret generic gcp-secret --from-file=creds=./infra/crossplane/gcp-credentials.json || true
       - kubectl apply -f infra/crossplane/gcp-provider-config.yaml
 
   setup-network:
