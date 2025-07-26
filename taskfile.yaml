@@ -4,6 +4,7 @@ silent: false
 
 vars:
   ENV: local
+  TIMEOUT_SEC: 90s
 
   APP_NS: epicshelter
   ARGO_NS: argocd
@@ -45,6 +46,15 @@ tasks:
       - kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/provider-gcp-gkecluster --timeout=90s
       - kubectl create secret generic gcp-secret --from-file=creds=./infra/crossplane/gcp-credentials.json || true
       - kubectl apply -f infra/crossplane/gcp-provider-config.yaml
+
+  setup-cloud-infra:
+    desc: Deploy cloud infrastructure resources
+    cmds: 
+      - echo "----- Setting up cloud resources -----"
+      - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
+      - kubectl apply -f infra/crossplane/gcp/gke/cluster-xrd.yaml
+      - kubectl apply -f infra/crossplane/gcp/gke/cluster-composition.yaml
+      - kubectl apply -f infra/crossplane/gcp/gke/cluster-claim.yaml
 
   setup-network:
     desc: Configure networking components
@@ -88,3 +98,4 @@ tasks:
       - task: setup-cluster
       - task: setup-crossplane
       - task: configure-gcp-provider
+      - task: setup-cloud-infra
