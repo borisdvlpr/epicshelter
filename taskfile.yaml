@@ -1,6 +1,6 @@
 version: "3"
 
-silent: false
+silent: true
 
 vars:
   ENV: local
@@ -53,8 +53,9 @@ tasks:
       - echo "----- Setting up cloud resources -----"
       - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
       - kubectl apply -f infra/crossplane/gcp/gke/cluster-xrd.yaml
+      - kubectl apply -f infra/crossplane/gcp/gke/cluster-fn.yaml
       - kubectl apply -f infra/crossplane/gcp/gke/cluster-composition.yaml
-      - kubectl apply -f infra/crossplane/gcp/gke/cluster-claim.yaml
+      - kubectl apply -f infra/crossplane/gcp/gke/cluster-app.yaml
 
   setup-network:
     desc: Configure networking components
