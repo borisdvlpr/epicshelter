@@ -1,41 +1,33 @@
-apiVersion: apiextensions.crossplane.io/v1
+apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
-  name: xclusters.compositions.io
+  namespace: crossplane-system
+  name: apps.epicshelter.crossplane.io
 spec:
-  group: compositions.io
+  scope: Namespaced
+  group: epicshelter.crossplane.io
   names:
-    kind: XCluster 
-    plural: xclusters
-  claimNames:
-    kind: GKECluster
-    plural: gkeclusters
+    kind: App
+    plural: apps
   versions:
-  - name: v1alpha1
-    served: true
-    referenceable: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              parameters:
-                type: object
-                properties:
-                  clusterName:
-                    type: string
-                  region:
-                    type: string
-                  machineType:
-                    type: string
-                  nodeCount:
-                    type: number
-              compositionRef:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    enum:
-                      - gke-cluster-nodepool
+    - name: v1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    clusterName:
+                      type: string
+                    region:
+                      type: string
+                    machineType:
+                      type: string
+                    nodeCount:
+                      type: number

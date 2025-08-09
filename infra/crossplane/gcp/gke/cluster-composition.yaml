@@ -1,62 +1,82 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: gke-cluster-nodepool
+  namespace: crossplane-system
+  name: epicshelter-yaml
 spec:
   compositeTypeRef:
-    apiVersion: compositions.io/v1alpha1
-    kind: XCluster
-  resources:
-    - name: cluster
-      base:
-        apiVersion: container.gcp.upbound.io/v1beta1 
-        kind: Cluster
-        metadata:
-          labels:
-            cluster_name: gke
-        spec:
-          forProvider:
-            enableAutopilot: false
-            enableIntranodeVisibility: true
-            ipAllocationPolicy:
-              - {}
-            initialNodeCount: 1
-            location: europe-west10
-            removeDefaultNodePool: true
-          writeConnectionSecretToRef:
-            name: gke-managed-resources-kubeconfig
-            namespace: crossplane-system
-      patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.parameters.region"
-          toFieldPath: "spec.forProvider.location"
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.parameters.clusterName"
-          toFieldPath: "metadata.labels.cluster_name"
+    apiVersion: epicshelter.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: crossplane-contrib-function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: cluster
+          base:
+            apiVersion: container.gcp.upbound.io/v1beta2
+            kind: Cluster
+            metadata:
+              name: epicshelter-cluster
+            spec:
+              forProvider:
+                deletionProtection: false
+                enableAutopilot: false
+                enableIntranodeVisibility: true
+                # ipAllocationPolicy: {}
+                initialNodeCount: 1
+                location: europe-west10
+              writeConnectionSecretToRef:
+                namespace: crossplane-system
+                name: gke-managed-resources-kubeconfig
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.location"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.clusterName"
+              toFieldPath: "metadata.labels.cluster_name"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "metadata.namespace"
+              toFieldPath: "metadata.namespace"
 
-    - name: nodepool
-      base:
-        apiVersion: container.gcp.upbound.io/v1beta1
-        kind: NodePool
-        spec:
-          forProvider:
-            clusterSelector:
-              matchLabels:
-                cluster_name: gke
-            nodeConfig:
-              - machineType: e2-medium
-                diskSizeGb: 50
-                oauthScopes:
-                  - https://www.googleapis.com/auth/cloud-platform
-                preemptible: true
-            nodeCount: 1
-      patches:
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.parameters.machineType"
-          toFieldPath: "spec.forProvider.nodeConfig[0].machineType"
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.parameters.nodeCount"
-          toFieldPath: "spec.forProvider.nodeCount"
-        - type: FromCompositeFieldPath
-          fromFieldPath: "spec.parameters.clusterName"
-          toFieldPath: "spec.forProvider.clusterSelector.matchLabels.cluster_name"
+        - name: nodepool
+          base:
+            apiVersion: container.gcp.upbound.io/v1beta2
+            kind: NodePool
+            metadata:
+              name: epicshelter-cluster-nodepool
+            spec:
+              forProvider:
+                cluster: epicshelter-cluster
+                location: europe-west10
+                nodeConfig:
+                  - machineType: e2-medium
+                    diskType: pd-standard
+                    oauthScopes:
+                      - https://www.googleapis.com/auth/cloud-platform
+                    preemptible: true
+                nodeCount: 1
+                removeDefaultNodePool: true
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.machineType"
+              toFieldPath: "spec.forProvider.nodeConfig[0].machineType"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.nodeCount"
+              toFieldPath: "spec.forProvider.nodeCount"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.location"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.clusterName"
+              toFieldPath: "spec.forProvider.cluster"
+              policy:
+                fromFieldPath: Required
+            - type: FromCompositeFieldPath
+              fromFieldPath: "metadata.namespace"
+              toFieldPath: "metadata.namespace"
