@@ -4,7 +4,7 @@ metadata:
   namespace: crossplane-system
   name: apps.epicshelter.crossplane.io
 spec:
-  scope: Namespaced
+  scope: Cluster
   group: epicshelter.crossplane.io
   names:
     kind: App
@@ -23,11 +23,13 @@ spec:
                 parameters:
                   type: object
                   properties:
-                    clusterName:
-                      type: string
                     region:
                       type: string
-                    machineType:
+                    subnet-az-1:
+                      type: string
+                    subnet-az-2:
                       type: string
                     nodeCount:
-                      type: number
+                      type: integer
+                    nodeType:
+                      type: string
