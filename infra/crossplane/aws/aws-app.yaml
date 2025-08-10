@@ -5,7 +5,8 @@ metadata:
   name: epicshelter-app
 spec:
   parameters:
-    clusterName: epicshelter-cluster
-    region: eu-central1
-    machineType: e2-small
+    region: eu-central-1
+    subnet-az-1: eu-central-1a
+    subnet-az-2: eu-central-1b
     nodeCount: 1
+    nodeType: t3.medium
