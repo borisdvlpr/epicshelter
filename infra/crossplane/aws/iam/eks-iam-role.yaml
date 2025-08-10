@@ -2,7 +2,7 @@ apiVersion: iam.aws.upbound.io/v1beta1
 kind: Role
 metadata:
   namespace: crossplane-system
-  name: epicshelter-eks-cluster
+  name: epicshelter-eks-cluster-role
 spec:
   forProvider:
     assumeRolePolicy: |
@@ -22,8 +22,8 @@ spec:
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: epicshelter-eks-cluster-policy
+  name: epicshelter-eks-cluster-role-policy
 spec:
   forProvider:
-    role: epicshelter-eks-cluster
+    role: epicshelter-eks-cluster-role
     policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
