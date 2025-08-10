@@ -1,0 +1,162 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  namespace: crossplane-system
+  name: epicshelter-yaml
+spec:
+  compositeTypeRef:
+    apiVersion: epicshelter.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: epicshelter-vpc
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: VPC
+            metadata:
+              name: epicshelter-vpc
+            spec:
+              forProvider:
+                region: eu-central-1
+                cidrBlock: 10.0.0.0/16
+                enableDnsHostnames: true
+                enableDnsSupport: true
+                tags:
+                  Name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-igw
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: InternetGateway
+            metadata:
+              name: epicshelter-igw
+            spec:
+              forProvider:
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-igw
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-private-subnet-1
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: Subnet
+            metadata:
+              name: epicshelter-private-eu-central-1a
+              labels:
+                name: epicshelter-private-eu-central-1a
+            spec:
+              forProvider:
+                availabilityZone: eu-central-1a
+                cidrBlock: 10.0.0.0/19
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-private-eu-central-1a
+                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/cluster/dev-demo: "shared"
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.subnet-az-1"
+              toFieldPath: "spec.forProvider.availabilityZone"
+        
+        - name: epicshelter-private-subnet-2
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: Subnet
+            metadata:
+              name: epicshelter-private-eu-central-1b
+              labels:
+                name: epicshelter-private-eu-central-1b
+            spec:
+              forProvider:
+                availabilityZone: eu-central-1b
+                cidrBlock: 10.0.32.0/19
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-private-eu-central-1b
+                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/cluster/dev-demo: "shared"
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.subnet-az-2"
+              toFieldPath: "spec.forProvider.availabilityZone"
+
+        - name: epicshelter-public-subnet-1
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: Subnet
+            metadata:
+              name: epicshelter-public-eu-central-1a
+              labels:
+                name: epicshelter-public-eu-central-1a
+            spec:
+              forProvider:
+                availabilityZone: eu-central-1a
+                cidrBlock: 10.0.64.0/19
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-public-eu-central-1a
+                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/cluster/dev-demo: "shared"
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.subnet-az-1"
+              toFieldPath: "spec.forProvider.availabilityZone"
+
+        - name: epicshelter-public-subnet-2
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: Subnet
+            metadata:
+              name: epicshelter-public-eu-central-1b
+              labels:
+                name: epicshelter-public-eu-central-1b
+            spec:
+              forProvider:
+                availabilityZone: eu-central-1b
+                cidrBlock: 10.0.96.0/19
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-public-eu-central-1b
+                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/cluster/dev-demo: "shared"
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.subnet-az-2"
+              toFieldPath: "spec.forProvider.availabilityZone"
