@@ -1,0 +1,33 @@
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  namespace: crossplane-system
+  name: apps.epicshelter.crossplane.io
+spec:
+  scope: Namespaced
+  group: epicshelter.crossplane.io
+  names:
+    kind: App
+    plural: apps
+  versions:
+    - name: v1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    clusterName:
+                      type: string
+                    region:
+                      type: string
+                    machineType:
+                      type: string
+                    nodeCount:
+                      type: number
