@@ -2,7 +2,7 @@ apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
   namespace: crossplane-system
-  name: epicshelter-yaml
+  name: epicshelter-vpc-composition
 spec:
   compositeTypeRef:
     apiVersion: epicshelter.crossplane.io/v1
