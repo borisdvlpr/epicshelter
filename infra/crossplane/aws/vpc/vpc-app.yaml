@@ -1,12 +1,10 @@
-apiVersion: epicshelter.crossplane.io/v1
+apiVersion: vpc.epicshelter.crossplane.io/v1
 kind: App
 metadata:
   namespace: crossplane-system
-  name: epicshelter-app
+  name: epicshelter-vpc-app
 spec:
   parameters:
     region: eu-central-1
     subnet-az-1: eu-central-1a
     subnet-az-2: eu-central-1b
-    nodeCount: 1
-    nodeType: t3.medium

@@ -2,10 +2,10 @@ apiVersion: apiextensions.crossplane.io/v2
 kind: CompositeResourceDefinition
 metadata:
   namespace: crossplane-system
-  name: apps.epicshelter.crossplane.io
+  name: apps.vpc.epicshelter.crossplane.io
 spec:
   scope: Cluster
-  group: epicshelter.crossplane.io
+  group: vpc.epicshelter.crossplane.io
   names:
     kind: App
     plural: apps
@@ -28,8 +28,4 @@ spec:
                     subnet-az-1:
                       type: string
                     subnet-az-2:
-                      type: string
-                    nodeCount:
-                      type: integer
-                    nodeType:
                       type: string
