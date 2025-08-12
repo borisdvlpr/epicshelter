@@ -1,0 +1,116 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  namespace: crossplane-system
+  name: epicshelter-eks-composition
+spec:
+  compositeTypeRef:
+    apiVersion: eks.epicshelter.crossplane.io/v1
+    kind: App
+  mode: Pipeline
+  pipeline:
+  - step: patch-and-transform
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+        - name: epicshelter-cluster
+          base:
+            apiVersion: eks.aws.upbound.io/v1beta1
+            kind: Cluster
+            metadata:
+              annotations:
+                uptest.upbound.io/timeout: "2400"
+              name: epicshelter-cluster
+            spec:
+              forProvider:
+                version: "1.33"
+                region: eu-central-1
+                roleArnRef:
+                  name: epicshelter-eks-cluster-role
+                vpcConfig:
+                  - endpointPrivateAccess: false
+                    endpointPublicAccess: true
+                    subnetIdRefs:
+                      - name: epicshelter-private-eu-central-1a
+                      - name: epicshelter-private-eu-central-1b
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-cluster-general-node-group
+          base:
+            apiVersion: eks.aws.upbound.io/v1beta1
+            kind: NodeGroup
+            metadata:
+              name: epicshelter-general-node-group
+            spec:
+              forProvider:
+                clusterNameRef:
+                  name: epicshelter-cluster
+                nodeRoleArnRef:
+                  name: epicshelter-eks-cluster-nodes-role
+                region: eu-central-1
+                capacityType: ON_DEMAND
+                instanceTypes: ["t3.small"]
+                labels:
+                  role: general
+                scalingConfig:
+                  - desiredSize: 1
+                    minSize: 1
+                    maxSize: 3
+                subnetIdRefs:
+                  - name: epicshelter-private-eu-central-1a
+                  - name: epicshelter-private-eu-central-1b
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.nodeCount"
+              toFieldPath: "spec.forProvider.scalingConfig[0].desiredSize"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.maxNodeCount"
+              toFieldPath: "spec.forProvider.scalingConfig[0].maxSize"
+
+        - name: epicshelter-cluster-spot-node-group
+          base:
+            apiVersion: eks.aws.upbound.io/v1beta1
+            kind: NodeGroup
+            metadata:
+              name: spot
+            spec:
+              forProvider:
+                clusterNameRef:
+                  name: epicshelter-cluster
+                nodeRoleArnRef:
+                  name: epicshelter-eks-cluster-nodes-role
+                region: eu-central-1
+                capacityType: SPOT
+                instanceTypes: ["t3.small"]
+                labels:
+                  role: spot
+                taint:
+                  - key: type
+                    value: spot
+                    effect: NO_SCHEDULE
+                scalingConfig:
+                  - desiredSize: 1
+                    minSize: 1
+                    maxSize: 3
+                subnetIdRefs:
+                  - name: epicshelter-private-eu-central-1a
+                  - name: epicshelter-private-eu-central-1b
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.nodeCount"
+              toFieldPath: "spec.forProvider.scalingConfig[0].desiredSize"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.maxNodeCount"
+              toFieldPath: "spec.forProvider.scalingConfig[0].maxSize"
