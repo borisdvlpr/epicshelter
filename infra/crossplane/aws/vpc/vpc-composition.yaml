@@ -5,7 +5,7 @@ metadata:
   name: epicshelter-vpc-composition
 spec:
   compositeTypeRef:
-    apiVersion: epicshelter.crossplane.io/v1
+    apiVersion: vpc.epicshelter.crossplane.io/v1
     kind: App
   mode: Pipeline
   pipeline:
