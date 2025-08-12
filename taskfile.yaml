@@ -37,25 +37,29 @@ tasks:
       - helm install crossplane crossplane-stable/crossplane --namespace {{.CROSSPLANE_NS}} --create-namespace || true
       - kubectl wait --for=condition=Available deployment/crossplane --namespace {{.CROSSPLANE_NS}} --timeout=90s
 
-  configure-gcp-provider:
-    desc: Configure Google Cloud Platform provider
+  configure-aws-provider:
+    desc: Configure Amazon Web Services provider
     cmds:
-      - echo "----- Configuring GCP Provider -----"
+      - echo "----- Configuring AWS Provider -----"
       - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
-      - kubectl apply -f infra/crossplane/gcp-provider.yaml
-      - kubectl wait --for=condition=Healthy provider.pkg.crossplane.io/provider-gcp-gkecluster --timeout=90s
-      - kubectl create secret generic gcp-secret --from-file=creds=./infra/crossplane/gcp-credentials.json || true
-      - kubectl apply -f infra/crossplane/gcp-provider-config.yaml
+      - kubectl apply -f infra/crossplane/aws-provider.yaml
+      - kubectl wait --for=condition=Healthy providers --all --timeout=90s
+      - kubectl create secret generic aws-secret --from-file=creds=./infra/crossplane/aws-credentials.txt || true
+      - kubectl apply -f infra/crossplane/aws-provider-config.yaml
 
   setup-cloud-infra:
     desc: Deploy cloud infrastructure resources
     cmds: 
-      - echo "----- Setting up cloud resources -----"
+      - echo "----- Setting up AWS resources -----"
       - kubectl config set-context --current --namespace {{.CROSSPLANE_NS}}
-      - kubectl apply -f infra/crossplane/gcp/gke/cluster-xrd.yaml
-      - kubectl apply -f infra/crossplane/gcp/gke/cluster-fn.yaml
-      - kubectl apply -f infra/crossplane/gcp/gke/cluster-composition.yaml
-      - kubectl apply -f infra/crossplane/gcp/gke/cluster-app.yaml
+      - kubectl apply -f infra/crossplane/functions
+      - kubectl wait --for=condition=Healthy functions --all --timeout=90s
+      - kubectl apply -f infra/crossplane/aws/iam
+      - kubectl apply -f infra/crossplane/aws/vpc/vpc-app-xrd.yaml
+      - kubectl apply -f infra/crossplane/aws/eks/eks-app-xrd.yaml
+      - kubectl wait --for=condition=Established xrd --all --timeout=90s
+      - kubectl apply -k infra/crossplane/aws
+      # - kubectl wait --for=condition=ready apps --all
 
   setup-network:
     desc: Configure networking components
@@ -98,5 +102,5 @@ tasks:
     cmds:
       - task: setup-cluster
       - task: setup-crossplane
-      - task: configure-gcp-provider
+      - task: configure-aws-provider
       - task: setup-cloud-infra
