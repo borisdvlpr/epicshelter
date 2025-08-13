@@ -81,7 +81,7 @@ spec:
             apiVersion: eks.aws.upbound.io/v1beta1
             kind: NodeGroup
             metadata:
-              name: spot
+              name: epicshelter-spot-node-group
             spec:
               forProvider:
                 clusterNameRef:
