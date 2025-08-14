@@ -28,6 +28,8 @@ spec:
               forProvider:
                 version: "1.33"
                 region: eu-central-1
+                accessConfig:
+                  - authenticationMode: API_AND_CONFIG_MAP
                 roleArnRef:
                   name: epicshelter-eks-cluster-role
                 vpcConfig:
