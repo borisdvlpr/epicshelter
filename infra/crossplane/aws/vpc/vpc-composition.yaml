@@ -160,3 +160,20 @@ spec:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.subnet-az-2"
               toFieldPath: "spec.forProvider.availabilityZone"
+        
+        - name: epicshelter-nat-eip
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: EIP
+            metadata:
+              name: epicshelter-nat-eip
+            spec:
+              forProvider:
+                region: eu-central-1
+                vpc: true
+                tags:
+                  Name: epicshelter-nat-eip
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
