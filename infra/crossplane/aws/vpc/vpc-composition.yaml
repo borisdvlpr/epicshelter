@@ -177,3 +177,25 @@ spec:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.region"
               toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-nat
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: NATGateway
+            metadata:
+              name: epicshelter-nat
+            spec:
+              forProvider:
+              region: eu-central-1
+              connectivityType: public
+              allocationIdRef:
+                name: epicshelter-nat-eip
+              subnetIdSelector:
+                matchLabels:
+                  name: epicshelter-public-eu-central-1a
+              tags:
+                Name: epicshelter-nat
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
