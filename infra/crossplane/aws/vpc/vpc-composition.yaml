@@ -186,15 +186,15 @@ spec:
               name: epicshelter-nat
             spec:
               forProvider:
-              region: eu-central-1
-              connectivityType: public
-              allocationIdRef:
-                name: epicshelter-nat-eip
-              subnetIdSelector:
-                matchLabels:
-                  name: epicshelter-public-eu-central-1a
-              tags:
-                Name: epicshelter-nat
+                region: eu-central-1
+                connectivityType: public
+                allocationIdRef:
+                  name: epicshelter-nat-eip
+                subnetIdSelector:
+                  matchLabels:
+                    name: epicshelter-public-eu-central-1a
+                tags:
+                  Name: epicshelter-nat
           patches:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.region"
