@@ -236,3 +236,40 @@ spec:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.region"
               toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-public-route-table
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: RouteTable
+            metadata:
+              name: epicshelter-public-route-table
+            spec:
+              forProvider:
+                region: eu-central-1
+                tags:
+                  Name: epicshelter-public-route-table
+                vpcIdRef:
+                  name: epicshelter-vpc
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-public-route
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: Route
+            metadata:
+              name: epicshelter-public-route
+            spec:
+              forProvider:
+                destinationCidrBlock: 0.0.0.0/0
+                natGatewayIdRef:
+                  name: epicshelter-igw
+                region: eu-central-1
+                routeTableIdRef:
+                  name: epicshelter-public-route-table
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
