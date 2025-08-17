@@ -264,7 +264,7 @@ spec:
             spec:
               forProvider:
                 destinationCidrBlock: 0.0.0.0/0
-                natGatewayIdRef:
+                gatewayIdRef:
                   name: epicshelter-igw
                 region: eu-central-1
                 routeTableIdRef:
