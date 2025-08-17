@@ -122,7 +122,7 @@ spec:
                 region: eu-central-1
                 tags:
                   Name: epicshelter-public-eu-central-1a
-                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/role/elb: "1"
                   kubernetes.io/cluster/epicshelter-cluster: "shared"
                 vpcIdRef:
                   name: epicshelter-vpc
@@ -149,7 +149,7 @@ spec:
                 region: eu-central-1
                 tags:
                   Name: epicshelter-public-eu-central-1b
-                  kubernetes.io/role/internal-elb: "1"
+                  kubernetes.io/role/elb: "1"
                   kubernetes.io/cluster/epicshelter-cluster: "shared"
                 vpcIdRef:
                   name: epicshelter-vpc
