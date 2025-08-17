@@ -273,3 +273,75 @@ spec:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.region"
               toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-private-route-association-1a
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: RouteTableAssociation
+            metadata:
+              name: epicshelter-private-route-association-1a
+            spec:
+              forProvider:
+                region: eu-central-1
+                routeTableIdRef:
+                  name: epicshelter-private-route-table
+                subnetIdRef:
+                  name: epicshelter-private-eu-central-1a
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-private-route-association-1b
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: RouteTableAssociation
+            metadata:
+              name: epicshelter-private-route-association-1b
+            spec:
+              forProvider:
+                region: eu-central-1
+                routeTableIdRef:
+                  name: epicshelter-private-route-table
+                subnetIdRef:
+                  name: epicshelter-private-eu-central-1b
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+
+        - name: epicshelter-public-route-association-1a
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: RouteTableAssociation
+            metadata:
+              name: epicshelter-public-route-association-1a
+            spec:
+              forProvider:
+                region: eu-central-1
+                routeTableIdRef:
+                  name: epicshelter-public-route-table
+                subnetIdRef:
+                  name: epicshelter-public-eu-central-1a
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
+        
+        - name: epicshelter-public-route-association-1b
+          base:
+            apiVersion: ec2.aws.upbound.io/v1beta1
+            kind: RouteTableAssociation
+            metadata:
+              name: epicshelter-public-route-association-1b
+            spec:
+              forProvider:
+                region: eu-central-1
+                routeTableIdRef:
+                  name: epicshelter-public-route-table
+                subnetIdRef:
+                  name: epicshelter-public-eu-central-1b
+          patches:
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.region"
+              toFieldPath: "spec.forProvider.region"
