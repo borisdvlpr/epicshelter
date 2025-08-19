@@ -21,7 +21,7 @@ spec:
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: RolePolicyAttachment
 metadata:
-  name: depicshelter-eks-cluster-nodes-worker-node-policy
+  name: epicshelter-eks-cluster-nodes-worker-node-policy
 spec:
   forProvider:
     role: epicshelter-eks-cluster-nodes-role
@@ -35,3 +35,12 @@ spec:
   forProvider:
     role: epicshelter-eks-cluster-nodes-role
     policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: epicshelter-eks-cluster-nodes-container-registry-read-only
+spec:
+  forProvider:
+    role: epicshelter-eks-cluster-nodes-role
+    policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
