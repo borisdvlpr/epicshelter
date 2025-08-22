@@ -29,5 +29,7 @@ spec:
                       type: integer
                     maxNodeCount:
                       type: integer
-                    nodeType:
-                      type: string
+                    instanceTypes:
+                      type: array
+                      items:
+                        type: string

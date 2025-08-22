@@ -72,6 +72,9 @@ spec:
               fromFieldPath: "spec.parameters.region"
               toFieldPath: "spec.forProvider.region"
             - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.nodeType"
+              toFieldPath: "spec.forProvider.instanceTypes"
+            - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.nodeCount"
               toFieldPath: "spec.forProvider.scalingConfig[0].desiredSize"
             - type: FromCompositeFieldPath
@@ -110,6 +113,9 @@ spec:
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.region"
               toFieldPath: "spec.forProvider.region"
+            - type: FromCompositeFieldPath
+              fromFieldPath: "spec.parameters.nodeType"
+              toFieldPath: "spec.forProvider.instanceTypes"
             - type: FromCompositeFieldPath
               fromFieldPath: "spec.parameters.nodeCount"
               toFieldPath: "spec.forProvider.scalingConfig[0].desiredSize"
