@@ -59,7 +59,6 @@ tasks:
       - kubectl apply -f infra/crossplane/aws/eks/eks-app-xrd.yaml
       - kubectl wait --for=condition=Established xrd --all --timeout=90s
       - kubectl apply -k infra/crossplane/aws
-      # - kubectl wait --for=condition=ready apps --all
 
   setup-network:
     desc: Configure networking components
@@ -97,10 +96,19 @@ tasks:
       - task: deploy-data
       - task: deploy-app
   
-  deploy:cloud:
+  deploy:cloud-infra:
     desc: Complete cloud environment setup and deployment
     cmds:
       - task: setup-cluster
       - task: setup-crossplane
       - task: configure-aws-provider
       - task: setup-cloud-infra
+    
+  deploy:cloud-app:
+    desc: Application deployment on cloud environment
+    cmds:
+      - aws eks update-kubeconfig --region eu-central-1 --name epicshelter-cluster --profile <AWS_PROFILE>
+      - task: setup-argo
+      - task: setup-network
+      - task: deploy-data
+      - task: deploy-app
