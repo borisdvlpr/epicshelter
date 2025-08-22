@@ -1,0 +1,46 @@
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: epicshelter-eks-cluster-nodes-role
+spec:
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "sts:AssumeRole",
+            "Principal": {
+              "Service": "ec2.amazonaws.com"
+            }
+          }
+        ]
+      }
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: epicshelter-eks-cluster-nodes-worker-node-policy
+spec:
+  forProvider:
+    role: epicshelter-eks-cluster-nodes-role
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: epicshelter-eks-cluster-nodes-cni-policy
+spec:
+  forProvider:
+    role: epicshelter-eks-cluster-nodes-role
+    policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: epicshelter-eks-cluster-nodes-container-registry-read-only
+spec:
+  forProvider:
+    role: epicshelter-eks-cluster-nodes-role
+    policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
