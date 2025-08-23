@@ -14,6 +14,7 @@ epicshelter is a cloud-agnostic infrastructure architecture that enables scalabl
 
 To get started, the following dependencies need to be installed:
 
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Devbox](https://www.jetify.com/docs/devbox/)
 - [Docker](https://docs.docker.com/manuals/)
 
