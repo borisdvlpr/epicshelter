@@ -82,7 +82,7 @@ tasks:
   deploy-app:
     desc: Deploy epicshelter application services
     cmds:
-      - echo "----- Deploying app on local cluster -----"
+      - echo "----- Deploying app on {{.ENV}} cluster -----"
       - kubectl create namespace {{.APP_NS}} || true
       - kubectl config set-context --current --namespace={{.APP_NS}}
       - kubectl apply -f manifests/epicshelter/epicshelter.yaml
