@@ -21,12 +21,12 @@ spec:
           ports:
             - containerPort: 6379
           resources:
-            limits:
-              memory: "512Mi"
-              cpu: "1000m"
             requests:
               memory: "256Mi"
-              cpu: "500m"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
           args: ["valkey-server", "--save", "900", "1", "--dir", "/data"]
           volumeMounts:
             - name: valkey-data
