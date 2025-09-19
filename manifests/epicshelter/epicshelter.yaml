@@ -27,7 +27,7 @@ spec:
             - containerPort: 3000
           env:
             - name: CACHE_URL
-              value: "valkey:6379"
+              value: "valkey.epicshelter.svc.cluster.local:6379"
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
