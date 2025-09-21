@@ -2,7 +2,7 @@
 
 ## Overview
 
-![Epicshelter Infrastructure Architecture](../assets/infra-architecture.png)
+![Epicshelter Orchestration Layer Architecture](../assets/orchestration-layer-architecture.png)
 
 This infrastructure provides a cloud-agnostic, GitOps-driven approach to building scalable and resilient systems. It combines local Kubernetes development with automated cloud provisioning using ArgoCD and Crossplane, enabling consistent infrastructure management across any cloud provider.
 
