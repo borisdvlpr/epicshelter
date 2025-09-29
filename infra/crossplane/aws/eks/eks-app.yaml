@@ -8,4 +8,4 @@ spec:
     region: eu-central-1
     nodeCount: 1
     maxNodeCount: 3
-    instanceTypes: [t3.medium]
+    instanceTypes: ["t3.medium"]
