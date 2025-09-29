@@ -68,7 +68,8 @@ tasks:
       - kubectl apply -k infra/network
       - kubectl config set-context --current --namespace {{.INGRESS_NS}}
       - kubectl wait --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=90s
-      - kubectl apply -f infra/network/ingress/ingress-nginx.yaml
+      - kubectl create namespace {{.APP_NS}} || true
+      - kubectl apply -f infra/network/ingress/ingress-nginx.yaml --namespace={{.APP_NS}}
 
   deploy-data:
     desc: Deploy data infrastructure services
