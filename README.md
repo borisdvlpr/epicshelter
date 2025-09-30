@@ -8,7 +8,7 @@
 
 ## Intro
 
-epicshelter is a cloud-agnostic infrastructure architecture that enables scalable and resilient application deployment across any cloud provider. Built on GitOps principles with Kubernetes, ArgoCD, and Crossplane, it provides a unified development experience from local clusters to production environments while maintaining complete portability and avoiding vendor lock-in.
+epicshelter is a cloud-agnostic infrastructure framework that enables scalable and resilient application deployment across any cloud provider. Built on GitOps principles with Kubernetes, ArgoCD, and Crossplane, it provides a unified development experience from local clusters to production environments while enabling portability and avoiding vendor lock-in.
 
 ## Getting started
 
@@ -24,7 +24,7 @@ If you'd rather not use Devbox, you can manually install the dependencies listed
 
 Detailed documentation is available on the following components:
 
-- [Infrastructure Architecture](docs/infra-architecture.md)
+- [Orchestration Layer Architecture](docs/orchestration-layer-architecture.md)
 
 ## Contributing
 
