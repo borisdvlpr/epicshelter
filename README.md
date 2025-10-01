@@ -24,7 +24,7 @@ If you'd rather not use Devbox, you can manually install the dependencies listed
 
 Detailed documentation is available on the following components:
 
-- [Orchestration Layer Architecture](docs/orchestration-layer-architecture.md)
+- [Cloud infrastructure](docs/cloud-infra-architecture.md) and [orchestration layer](docs/orchestration-layer-architecture.md) architectures
 
 ## Contributing
 
