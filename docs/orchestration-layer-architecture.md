@@ -4,27 +4,29 @@
 
 ![Epicshelter Orchestration Layer Architecture](../assets/orchestration-layer-architecture.png)
 
-This infrastructure provides a cloud-agnostic, GitOps-driven approach to building scalable and resilient systems. It combines local Kubernetes development with automated cloud provisioning using ArgoCD and Crossplane, enabling consistent infrastructure management across any cloud provider.
+This architecture provides a cloud-agnostic, GitOps-driven approach to building scalable and resilient systems. It
+combines local Kubernetes development with automated cloud provisioning using ArgoCD and Crossplane, enabling consistent
+infrastructure management across any cloud provider.
 
 ## Core Components
 
-### Local Development Clusters
+- **Local Development Clusters** - Lightweight Kubernetes clusters running on developer workstations that mirror
+  production infrastructure. These clusters provide a complete development and testing environment with quick feedback
+  loops, allowing infrastructure validation before committing changes to the GitOps workflow.
 
-Lightweight Kubernetes clusters running on developer workstations that mirror production infrastructure. These clusters provide a complete development and testing environment with quick feedback loops, allowing infrastructure validation before committing changes to the GitOps workflow.
+- **GitOps Repository** - A centralized Git repository containing all infrastructure definitions, application manifests,
+  and configuration files. This serves as the single source of truth for the system's state, providing clear visibility
+  of infrastructure evolution through standard Git workflows.
 
-### GitOps Repository
+- **ArgoCD** - The GitOps operator responsible for monitoring the Git repository and ensuring continuous synchronization
+  between the desired state in Git and the actual state of both local and cloud environments. The architecture uses two
+  distinct ArgoCD applications, one for application workloads and configurations, another for infrastructure resources
+  and lifecycle management
 
-A centralized Git repository containing all infrastructure definitions, application manifests, and configuration files. This serves as the single source of truth for the system's state, providing clear visibility of infrastructure evolution through standard Git workflows.
-
-### ArgoCD
-
-The GitOps operator responsible for monitoring the Git repository and ensuring continuous synchronization between the desired state in Git and the actual state of both local and cloud environments. The architecture uses two distinct ArgoCD applications:
-- One for application workloads and configurations
-- Another for infrastructure resources and lifecycle management
-
-### Crossplane
-
-The cloud-agnostic infrastructure provisioning engine that translates Kubernetes Custom Resource Definitions (CRDs) into actual cloud resources. It provides a standardized abstraction layer that decouples infrastructure definitions from specific cloud provider implementations, enabling seamless provider switching through configuration changes.
+- **Crossplane** - The cloud-agnostic infrastructure provisioning engine that translates Kubernetes Custom Resource
+  Definitions (CRDs) into actual cloud resources. It provides a standardized abstraction layer that decouples
+  infrastructure definitions from specific cloud provider implementations, enabling seamless provider switching through
+  configuration changes.
 
 ## Architecture Design
 
@@ -63,7 +65,8 @@ The primary difference between local and cloud environments lies in their resour
 
 ### Continuous Infrastructure Management
 
-ArgoCD instances in both environments constantly monitor the shared Git repository, identifying changes to infrastructure definitions in real-time. When changes are committed:
+ArgoCD instances in both environments constantly monitor the shared Git repository, identifying changes to
+infrastructure definitions in real-time. When changes are committed:
 
 - Both local and cloud ArgoCD instances independently assess and apply necessary updates
 - Environment-specific overlays ensure correct configurations for each target
@@ -76,4 +79,5 @@ The cloud cluster's self-managed nature provides significant operational benefit
 
 - Once ArgoCD is active in the cloud, it operates independently of local development infrastructure
 - If local clusters go offline or are deleted, cloud resources continue running and stay synchronized with Git
-- Developers can connect to existing cloud resources from new local environments without interrupting production workloads
+- Developers can connect to existing cloud resources from new local environments without interrupting production
+  workloads
